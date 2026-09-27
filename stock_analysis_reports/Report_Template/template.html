@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>דוח ועדת השקעות מרובת סוכנים - {{TICKER}}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="Report_Template/style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Macro Economic Warning Banner (Auto-populated if High-Impact US events today) -->
+    {{MACRO_ALERT_BANNER}}
+
+    <!-- Header Section -->
+    <div class="header-card">
+        <div class="header-top">
+            <div class="title-group">
+                <h1>🏛️ ועדת השקעות מרובת סוכנים: {{TICKER}}</h1>
+                <div class="subtitle">{{NAME}} • בורסת {{EXCHANGE}} • מסגרת זמן {{TIMEFRAME}} • {{DATE}}</div>
+            </div>
+            <div class="badge-consensus {{CONSENSUS_CLASS}}">
+                <span class="tooltip-container">
+                    <span class="tooltip-trigger">?</span>
+                    <span class="tooltip-text">הכרעת הוועדה: ירוק = קנייה (BUY), כתום = הימנעות/ניטרלי (HOLD/AVOID), אדום = מכירה (SELL). משקלל את כל 3 סוכני הדיבייט.</span>
+                </span>
+                <span>{{CONSENSUS_TEXT}}</span>
+            </div>
+        </div>
+
+        <div class="price-metrics">
+            <div class="metric-box">
+                <div class="metric-label">
+                    מחיר סגירה אחרון
+                    <span class="tooltip-container">
+                        <span class="tooltip-trigger">?</span>
+                        <span class="tooltip-text">מחיר הסגירה הרשמי האחרון שנרשם בבורסה, כולל אחוז השינוי בנר היומי.</span>
+                    </span>
+                </div>
+                <div class="metric-value">{{PRICE}}</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-label">
+                    ציון משוקלל (Net Score)
+                    <span class="tooltip-container">
+                        <span class="tooltip-trigger">?</span>
+                        <span class="tooltip-text">ציון משוקלל מסוכם מ-5- (מכירה חזקה) ועד 5+ (קנייה חזקה). שקלול טכני, מומנטום וסיכונים.</span>
+                    </span>
+                </div>
+                <div class="metric-value" style="color: var(--accent-red);">{{NET_SCORE}}</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-label">
+                    רמת ביטחון הוועדה
+                    <span class="tooltip-container">
+                        <span class="tooltip-trigger">?</span>
+                        <span class="tooltip-text">מידת ההסכמה בין הסוכנים. רמת ביטחון גבוהה מעידה שכל הסוכנים מצביעים לאותו כיוון פעולה.</span>
+                    </span>
+                </div>
+                <div class="metric-value" style="color: var(--accent-blue);">{{CONFIDENCE}}</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-label">
+                    ציון איכות טרייד (Trade Quality)
+                    <span class="tooltip-container">
+                        <span class="tooltip-trigger">?</span>
+                        <span class="tooltip-text">ציון איכות מ-0 עד 100 הבודק קרבה לתמיכה ויחס סיכוי/סיכון. מתחת ל-40 מומלץ להימנע מכניסה.</span>
+                    </span>
+                </div>
+                <div class="metric-value" style="color: var(--accent-amber);">{{TRADE_QUALITY_SCORE}}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tri-Layer Confluence Strip: Market -> Sector -> Stock -->
+    <div class="tri-layer-card">
+        <div class="tri-layer-header">
+            <div class="title">
+                <span>🌐 מודל 3 השכבות המוסדי (Tri-Layer Confluence: Market ➔ Sector ➔ Stock)</span>
+            </div>
+            <span class="tooltip-container">
+                <span class="tooltip-trigger">?</span>
+                <span class="tooltip-text">המודל המוסדי המוביל: סנכרון מלא בין בריאות המדד הכללי (Layer 1), מומנטום ורוטציית הסקטור ב-RRG (Layer 2), ותזמון כניסה ב-Discount/OTE במניה הבודדת (Layer 3).</span>
+            </span>
+        </div>
+        <div class="tri-layer-grid">
+            <div class="layer-item">
+                <div class="layer-badge">שכבה 1: שוק (Market)</div>
+                <div class="layer-title">{{LAYER1_MARKET_NAME}}</div>
+                <div class="layer-status">{{LAYER1_MARKET_BADGE}}</div>
+                <div class="layer-desc">{{LAYER1_MARKET_DESC}}</div>
+            </div>
+            <div class="layer-arrow">➔</div>
+            <div class="layer-item">
+                <div class="layer-badge">
+                    <span>שכבה 2: סקטור RRG</span>
+                    <span class="tooltip-container">
+                        <span class="tooltip-trigger">?</span>
+                        <span class="tooltip-text">
+                            <strong>מקרא 4 רביעי הרוטציה (RRG מול SPY):</strong><br>
+                            • 🟢 <strong>מוביל (Leading):</strong> זרימת הון ורוח גבית מוסדית מרבית.<br>
+                            • 🚀 <strong>משתפר (Improving):</strong> צבירה מוקדמת של כסף חכם (הזדמנות כניסה).<br>
+                            • 🟡 <strong>נחלש (Weakening):</strong> אובדן תנופה יחסית מול השוק.<br>
+                            • 🔴 <strong>מפגר (Lagging):</strong> יציאת כספים מוסדיים — אזהרה מלונג בסווינג.
+                        </span>
+                    </span>
+                </div>
+                <div class="layer-title">{{LAYER2_SECTOR_NAME}}</div>
+                <div class="layer-status">{{LAYER2_SECTOR_BADGE}}</div>
+                <div class="layer-desc">{{LAYER2_SECTOR_DESC}}</div>
+            </div>
+            <div class="layer-arrow">➔</div>
+            <div class="layer-item">
+                <div class="layer-badge">שכבה 3: מניה (Setup & Alpha)</div>
+                <div class="layer-title">{{LAYER3_STOCK_NAME}}</div>
+                <div class="layer-status">
+                    {{LAYER3_STOCK_BADGE}}
+                    {{LAYER3_ALPHA_BADGE}}
+                </div>
+                <div class="layer-desc">{{LAYER3_STOCK_DESC}}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dual Intelligence Grid: Smart Money Options & Strategy Backtest -->
+    <div class="section-title">
+        <span>💡 מודיעין מוסדי ואימות סטטיסטי (Market Intelligence & Backtest)</span>
+        <span class="tooltip-container">
+            <span class="tooltip-trigger">?</span>
+            <span class="tooltip-text">שילוב מעקב אחר כסף חכם בשוק הנגזרים (Options Flow) יחד עם בקטסט היסטורי של 12 חודשים לבדיקת האסטרטגיה המנצחת.</span>
+        </span>
+    </div>
+
+    <div class="intel-grid">
+        <!-- Smart Money Options Flow -->
+        <div class="intel-card options">
+            <div class="intel-header">
+                <div class="intel-title">
+                    <span>🐳 מודיעין הכסף החכם והנגזרים (Options Pulse)</span>
+                    <span class="tooltip-container">
+                        <span class="tooltip-trigger">?</span>
+                        <span class="tooltip-text">מעקב אחר פעילות שחקנים מוסדיים. יחס Put/Call מתחת ל-0.7 מעיד על עניין שורי; יחס מעל 1.0 מעיד על הגנות או צפי לירידות.</span>
+                    </span>
+                </div>
+                <div class="intel-pill {{OPTIONS_BADGE_CLASS}}">
+                    {{OPTIONS_BADGE_TEXT}}
+                </div>
+            </div>
+            <div class="intel-row">
+                <span class="intel-label">יחס נפח פוט/קול (Put/Call Ratio):</span>
+                <span class="intel-val" style="color: var(--accent-blue);">{{PUT_CALL_RATIO}}</span>
+            </div>
+            <div class="intel-row">
+                <span class="intel-label">חלוקת מחזורי חוזים:</span>
+                <span class="intel-val">{{OPTIONS_CALL_VOL}} Calls מול {{OPTIONS_PUT_VOL}} Puts</span>
+            </div>
+            <div class="intel-row">
+                <span class="intel-label">דומיננטיות כיוונית:</span>
+                <span class="intel-val">{{OPTIONS_DOMINANCE}}</span>
+            </div>
+            <div class="tactical-summary">
+                <strong>תובנה מוסדית:</strong> {{OPTIONS_SUMMARY}}
+            </div>
+        </div>
+
+        <!-- Historical Strategy Backtest (Clean 2-Line Decision Card) -->
+        <div class="intel-card backtest">
+            <div class="intel-header">
+                <div class="intel-title">
+                    <span>🧪 תעודת זהות סטטיסטית (Historical Strategy Match)</span>
+                    <span class="tooltip-container">
+                        <span class="tooltip-trigger">?</span>
+                        <span class="tooltip-text">סימולציית מסחר של 9 אסטרטגיות שונות על נתוני האמת של השנה האחרונה. חושפת איזו אסטרטגיה הניבה תשואת שיא ומאיזו מלכודת סטטיסטית יש להיזהר.</span>
+                    </span>
+                </div>
+                <div class="intel-pill" style="background: var(--accent-purple-bg); color: var(--accent-purple);">
+                    בקטסט 12 חודשים
+                </div>
+            </div>
+            <div class="intel-row">
+                <span class="intel-label">🏆 אסטרטגיה מנצחת בהיסטוריית המניה:</span>
+                <span class="intel-val" style="color: var(--accent-green);">{{HISTORICAL_WINNER}}</span>
+            </div>
+            <div class="intel-row">
+                <span class="intel-label">תשואת האסטרטגיה המנצחת:</span>
+                <span class="intel-val" style="color: var(--accent-green);">{{HISTORICAL_WINNER_STATS}}</span>
+            </div>
+            <div class="intel-row">
+                <span class="intel-label">⚠️ מלכודת סטטיסטית להימנע ממנה:</span>
+                <span class="intel-val" style="color: var(--accent-red);">{{HISTORICAL_TRAP}}</span>
+            </div>
+            <div class="tactical-summary">
+                <strong>אימות לסטאפ הנוכחי:</strong> {{HISTORICAL_VALIDATION}}
+            </div>
+        </div>
+    </div>
+
+    <!-- 3 Agents Debate Section -->
+    <div class="section-title">
+        <span>👥 טיעוני סוכני הוועדה (The Investment Committee Debate)</span>
+        <span class="tooltip-container">
+            <span class="tooltip-trigger">?</span>
+            <span class="tooltip-text">התעמתות בין 3 מומחים וירטואליים: האנליסט הטכני (גרף וממוצעים), אנליסט המומנטום (מהירות וכיוון), ומנהל הסיכונים (תנודתיות והגנות).</span>
+        </span>
+    </div>
+
+    <div class="agents-grid">
+        <!-- Technical Analyst -->
+        <div class="agent-card">
+            <div>
+                <div class="agent-header">
+                    <div class="agent-name">
+                        📈 אנליסט טכני
+                        <span class="tooltip-container">
+                            <span class="tooltip-trigger">?</span>
+                            <span class="tooltip-text">בוחן רמות מחיר, ממוצעים נעים (EMA 20, 50), רצועות בולינגר ומתנד RSI לאיתור עוצמה טכנית.</span>
+                        </span>
+                    </div>
+                    <div class="agent-score {{TECH_SCORE_CLASS}}">{{TECH_STANCE}}</div>
+                </div>
+                <ul class="agent-observations">
+                    {{TECH_ITEMS}}
+                </ul>
+            </div>
+            <div class="tactical-summary">
+                <strong>מסקנה טכנית:</strong> {{TECH_SUMMARY}}
+            </div>
+        </div>
+
+        <!-- Sentiment & Momentum Analyst -->
+        <div class="agent-card">
+            <div>
+                <div class="agent-header">
+                    <div class="agent-name">
+                        ⚡ אנליסט סנטימנט ומומנטום
+                        <span class="tooltip-container">
+                            <span class="tooltip-trigger">?</span>
+                            <span class="tooltip-text">מנתח את כיוון הנר היומי, חיתוכי מתנד MACD וסנטימנט סקטוריאלי לבדיקת מהירות התנועה.</span>
+                        </span>
+                    </div>
+                    <div class="agent-score {{SENT_SCORE_CLASS}}">{{SENT_STANCE}}</div>
+                </div>
+                <ul class="agent-observations">
+                    {{SENT_ITEMS}}
+                </ul>
+            </div>
+            <div class="tactical-summary">
+                <strong>מסקנת מומנטום:</strong> {{SENT_SUMMARY}}
+            </div>
+        </div>
+
+        <!-- Risk Manager -->
+        <div class="agent-card">
+            <div>
+                <div class="agent-header">
+                    <div class="agent-name">
+                        🛡️ מנהל סיכונים
+                        <span class="tooltip-container">
+                            <span class="tooltip-trigger">?</span>
+                            <span class="tooltip-text">בוחן תנודתיות יומית (ATR, BBW), מרחק מממוצע 200 ראשי, ומבנה Golden/Death Cross להגנת ההון.</span>
+                        </span>
+                    </div>
+                    <div class="agent-score {{RISK_SCORE_CLASS}}">{{RISK_STANCE}}</div>
+                </div>
+                <ul class="agent-observations">
+                    {{RISK_ITEMS}}
+                </ul>
+            </div>
+            <div class="tactical-summary">
+                <strong>מסקנת סיכון:</strong> {{RISK_SUMMARY}}
+            </div>
+        </div>
+    </div>
+
+    <!-- Combined Quantitative Analysis (From combined_analysis) -->
+    <div class="section-title">
+        <span>📐 רמות מפתח ומחוונים כמותיים (Quantitative Confluence Engine)</span>
+        <span class="tooltip-container">
+            <span class="tooltip-trigger">?</span>
+            <span class="tooltip-text">שקלול מתמטי של נקודות פיבוט, רמות תמיכה והתנגדות אלגוריתמיות, ותנודתיות ATR לחישוב מדויק של יחסי סיכוי-סיכון.</span>
+        </span>
+    </div>
+
+    <div class="quant-box">
+        <!-- Sub-section 1: רמות מחיר וביצוע טקטי (4 קוביות סימטריות) -->
+        <div class="quant-section-header">
+            <div class="quant-section-title">
+                <span class="icon">📐</span>
+                <span>רמות מחיר וביצוע טקטי (Execution & Risk Levels)</span>
+            </div>
+            <div class="quant-section-desc">מפת התמיכות, ההתנגדויות, הפיבוט וחישוב ה-R:R לניהול העסקה</div>
+        </div>
+
+        <div class="quant-grid execution-grid">
+            <div class="quant-item">
+                <div class="quant-item-label">תמיכה קרובה (Nearest Support)</div>
+                <div class="quant-item-value" style="color: var(--accent-green);">{{SUPPORT_LEVEL}}</div>
+            </div>
+            <div class="quant-item">
+                <div class="quant-item-label">התנגדות קרובה (Nearest Resistance)</div>
+                <div class="quant-item-value" style="color: var(--accent-red);">{{RESISTANCE_LEVEL}}</div>
+            </div>
+            <div class="quant-item">
+                <div class="quant-item-label">
+                    <span>פיבוט ו-ATR יומי (Pivot & ATR)</span>
+                    <span class="tooltip-container">
+                        <span class="tooltip-trigger">?</span>
+                        <span class="tooltip-text">נקודת ציר יומית (Pivot) שמעליה הנטייה תוך-יומית שורית, לצד תנודתיות יומית ממוצעת (ATR) לכיול מרחק הסטופ ומרווח הרעש.</span>
+                    </span>
+                </div>
+                <div class="quant-item-value">
+                    <div style="font-size: 15px; color: var(--text-main);">פיבוט: {{PIVOT_LEVEL}}</div>
+                    <div style="font-size: 12.5px; color: var(--text-muted); font-weight: normal; margin-top: 3px;">ATR: {{ATR_VALUE}}</div>
+                </div>
+            </div>
+            <div class="quant-item">
+                <div class="quant-item-label">
+                    <span>יחס סיכוי-סיכון מחושב (Algo R:R)</span>
+                    <span class="tooltip-container">
+                        <span class="tooltip-trigger">?</span>
+                        <span class="tooltip-text">יחס הרווח הצפוי עד ליעד מול הסיכון בסטופ. תנאי סף מוסדי: לפחות 1:1.50 כדי להבטיח תוחלת חיובית לאורך זמן.</span>
+                    </span>
+                </div>
+                <div class="quant-item-value" style="color: var(--accent-blue);">{{CALCULATED_RR}}</div>
+            </div>
+        </div>
+
+        <!-- Sub-section 2: מטריצת 4 המסננים המוסדיים (4 קוביות מודגשות) -->
+        <div class="quant-section-header" style="margin-top: 24px;">
+            <div class="quant-section-title">
+                <span class="icon">🏛️</span>
+                <span>מטריצת 4 המסננים המוסדיים (Institutional Edge Matrix)</span>
+            </div>
+            <div class="quant-section-desc">בדיקת 4 שאלות מפתח: שוק ➔ סקטור ➔ אזור תמחור ➔ אלפא המניה</div>
+        </div>
+
+        <div class="quant-grid filters-grid">
+            <!-- Filter 1: Market Regime -->
+            <div class="quant-item filter-card">
+                <div class="filter-card-header">
+                    <span class="filter-step-badge">1</span>
+                    <span class="filter-card-title">משטר שוק (Market)</span>
+                    <span class="tooltip-container">
+                        <span class="tooltip-trigger">?</span>
+                        <span class="tooltip-text">מדד ADX לקביעת עוצמת המגמה: מעל 25 = מגמה מובהקת (Trend); מתחת ל-20 = סביבת דשדוש (Chop / Range) שבה פריצות נכשלות וחובה לקנות רק ברצפת הטווח.</span>
+                    </span>
+                </div>
+                <div class="filter-question">רוח גבית מהמדד?</div>
+                <div class="quant-item-value">{{MARKET_REGIME_BADGE}}</div>
+                <div class="filter-micro-note">{{MARKET_REGIME_MICRO}}</div>
+            </div>
+
+            <!-- Filter 2: Sector RRG -->
+            <div class="quant-item filter-card">
+                <div class="filter-card-header">
+                    <span class="filter-step-badge">2</span>
+                    <span class="filter-card-title">סקטור RRG (Sector)</span>
+                    <span class="tooltip-container">
+                        <span class="tooltip-trigger">?</span>
+                        <span class="tooltip-text">
+                            <strong>מקרא 4 רביעי הרוטציה (RRG מול SPY):</strong><br>
+                            • 🟢 <strong>מוביל (Leading):</strong> חוזק יחסי ומומנטום מעל 100. ביצועי יתר ורוח גבית מוסדית חזקה.<br>
+                            • 🚀 <strong>משתפר (Improving):</strong> מומנטום עולה למרות שהחוזק עדיין נמוך. שלב הצבירה המוקדמת של כסף חכם – תזמון כניסה אופטימלי!<br>
+                            • 🟡 <strong>נחלש (Weakening):</strong> חוזק יחסי גבוה אך מומנטום יורד. אובדן תנופה יחסית וסכנת מימושים.<br>
+                            • 🔴 <strong>מפגר (Lagging):</strong> ביצועי חסר ויציאת הון מוסדי — אזהרה להימנע מלונגים חדשים ללא הגנות קשיחות.
+                        </span>
+                    </span>
+                </div>
+                <div class="filter-question">כסף מוסדי זורם לתחום?</div>
+                <div class="quant-item-value">{{SECTOR_RRG_BADGE}}</div>
+                <div class="filter-micro-note">{{SECTOR_RRG_MICRO}}</div>
+            </div>
+
+            <!-- Filter 3: Pricing Zone / OTE -->
+            <div class="quant-item filter-card">
+                <div class="filter-card-header">
+                    <span class="filter-step-badge">3</span>
+                    <span class="filter-card-title">אזור תמחור (Zone)</span>
+                    <span class="tooltip-container">
+                        <span class="tooltip-trigger">?</span>
+                        <span class="tooltip-text">חלוקת הטווח האחרון: מעל 50% = אזור יקר (Premium) המייצר R:R נחות; מתחת ל-50% וסביב 61.8%-78.6% = אזור מבצע אופטימלי (Discount & OTE) המבטיח סטופ הדוק ויעד מרווח.</span>
+                    </span>
+                </div>
+                <div class="filter-question">מחיר מבצע או FOMO?</div>
+                <div class="quant-item-value">{{PRICING_ZONE_BADGE}}</div>
+                <div class="filter-micro-note">{{PRICING_ZONE_MICRO}}</div>
+            </div>
+
+            <!-- Filter 4: Stock Relative Strength / Alpha -->
+            <div class="quant-item filter-card">
+                <div class="filter-card-header">
+                    <span class="filter-step-badge">4</span>
+                    <span class="filter-card-title">חוזק יחסי (Alpha)</span>
+                    <span class="tooltip-container">
+                        <span class="tooltip-trigger">?</span>
+                        <span class="tooltip-text">מדד ביצועי יתר (Alpha) מול SPY ומול סקטור האם ב-20 הימים האחרונים. מזהה מנהיגות שוק אמיתית (Dual Alpha) או ספיגת היצע (Divergence) בימי ירידות במדד.</span>
+                    </span>
+                </div>
+                <div class="filter-question">המניה מנצחת את השוק?</div>
+                <div class="quant-item-value">{{RELATIVE_STRENGTH_BADGE}}</div>
+                <div class="filter-micro-note">{{RELATIVE_STRENGTH_MICRO}}</div>
+            </div>
+        </div>
+
+        <!-- Sub-section 3: רמזור מוסדי ושורה תחתונה להחלטה (Institutional Verdict & Traffic Light) -->
+        <div class="verdict-box {{VERDICT_BOX_CLASS}}">
+            <div class="verdict-top-bar">
+                <div class="verdict-title-group">
+                    <span class="verdict-icon">{{VERDICT_ICON}}</span>
+                    <span class="verdict-main-title">שורה תחתונה מוסדית להחלטה (Institutional Verdict)</span>
+                </div>
+                <div class="verdict-score-pill {{VERDICT_SCORE_CLASS}}">
+                    {{VERDICT_SCORE_TEXT}}
+                </div>
+            </div>
+            <div class="verdict-body">
+                <div class="verdict-action-line">
+                    <span class="action-tag">💡 הנחיית ביצוע מעשית:</span>
+                    <span class="action-text">{{VERDICT_ACTION_TEXT}}</span>
+                </div>
+                <div class="verdict-summary-line">
+                    <span class="summary-tag">🔗 שילוב אותות (Confluence):</span>
+                    <span class="summary-text">{{CONFLUENCE_SUMMARY}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary Scorecard Table -->
+    <div class="section-title">
+        <span>📊 טבלת הצבעה ונימוקים משוקללים</span>
+        <span class="tooltip-container">
+            <span class="tooltip-trigger">?</span>
+            <span class="tooltip-text">תמונת מצב מרוכזת של עמדות שלושת הסוכנים, הציונים המדויקים, והנימוקים המרכזיים שהובילו להחלטה הסופית.</span>
+        </span>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>סוכן בוועדה</th>
+                    <th>עמדה</th>
+                    <th>ציון</th>
+                    <th>נימוקים מרכזיים שנשקלו</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{TABLE_ROWS}}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Dual Strategy Section -->
+    <div class="section-title">
+        <span>🧭 המלצות מסחר וניהול אסטרטגי: סווינג מול לונג</span>
+        <span class="tooltip-container">
+            <span class="tooltip-trigger">?</span>
+            <span class="tooltip-text">תוכניות פעולה מותאמות אישית: סווינג קצר (עד שבועיים) מול השקעת לונג סבלנית במנות (DCA).</span>
+        </span>
+    </div>
+
+    <div class="strategy-grid">
+        <!-- Swing Strategy -->
+        <div class="strategy-card swing">
+            <div class="strategy-header">
+                <div class="strategy-title">
+                    <span>🎯 אסטרטגיית סווינג (טווח קצר: עד שבועיים)</span>
+                    <span class="tooltip-container">
+                        <span class="tooltip-trigger">?</span>
+                        <span class="tooltip-text">תוכנית מסחר קצרת טווח (עד שבועיים) בהקצאה מוגדרת של $10,000. מכוונת לרווח של 1.5%-2.5% ברוטו, עם תחשיב נטו לאחר עמלות IBKR ישראל ומס רווחי הון 25%.</span>
+                    </span>
+                </div>
+                <div class="strategy-badge" style="background: var(--accent-amber-bg); color: var(--accent-amber);">
+                    {{SWING_BADGE_TEXT}}
+                </div>
+            </div>
+
+            {{SWING_CARD_CONTENT}}
+        </div>
+
+        <!-- Long Strategy -->
+        <div class="strategy-card long">
+            <div class="strategy-header">
+                <div class="strategy-title">
+                    <span>🏦 אסטרטגיית לונג / השקעה (טווח בינוני-ארוך)</span>
+                    <span class="tooltip-container">
+                        <span class="tooltip-trigger">?</span>
+                        <span class="tooltip-text">מפת דרכים למשקיעים (חודשים עד שנים) על בסיס מגמת המאקרו השבועית, ממוצע 200, ואיסוף מדורג (DCA) ברמות שפל.</span>
+                    </span>
+                </div>
+                <div class="strategy-badge" style="background: var(--accent-green-bg); color: var(--accent-green);">
+                    אופק: חודשים עד שנים
+                </div>
+            </div>
+
+            <div class="plan-item">
+                <span class="plan-label">מגמת מאקרו שבועית:</span>
+                <span class="plan-value" style="color: var(--accent-green);">{{LONG_BIAS}}</span>
+            </div>
+            <div class="plan-item">
+                <span class="plan-label">מרחק ממוצע נע 200 שבועי:</span>
+                <span class="plan-value">{{LONG_MA_STATUS}}</span>
+            </div>
+            <div class="plan-item">
+                <span class="plan-label">מבנה שוק ארוך-טווח:</span>
+                <span class="plan-value" style="color: var(--accent-blue);">{{LONG_STRUCTURE}}</span>
+            </div>
+            <div class="plan-item">
+                <span class="plan-label">שיטת כניסה מומלצת:</span>
+                <span class="plan-value">{{LONG_ENTRY_METHOD}}</span>
+            </div>
+            <div class="plan-item">
+                <span class="plan-label">רמת הגנה / שבירת מגמה:</span>
+                <span class="plan-value" style="color: var(--accent-red);">{{LONG_PROTECTION}}</span>
+            </div>
+
+            <div class="tactical-summary">
+                <strong>דגש אסטרטגי למשקיע:</strong> {{LONG_SUMMARY}}
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        דוח זה הופק אוטומטית באמצעות StockMarket AI Agent • נתוני זמן אמת מבוססים על שרתי TradingView MCP • אין לראות באמור ייעוץ פיננסי.
+    </div>
+
+</div>
+
+<!-- Chart Zoom Lightbox Modal -->
+<div id="chartModal" class="chart-modal" onclick="closeChartModal(event)">
+    <div class="chart-modal-dialog" onclick="event.stopPropagation()">
+        <div class="chart-modal-header">
+            <span id="chartModalTitle" class="chart-modal-title">📊 סימולציית גרף מסחר מוגדלת</span>
+            <button type="button" class="chart-modal-close" onclick="closeChartModal()" title="סגור (Esc)">✕</button>
+        </div>
+        <div class="chart-modal-body">
+            <img id="chartModalImg" src="" alt="גרף מוגדל" class="chart-modal-img" onclick="closeChartModal()" />
+        </div>
+        <div class="chart-modal-footer">
+            <span>💡 לחץ בכל מקום מחוץ לגרף או על מקש ESC במקלדת כדי לחזור לדוח</span>
+        </div>
+    </div>
+</div>
+
+<script>
+function openChartModal(imgSrc, titleText) {
+    const modal = document.getElementById('chartModal');
+    const modalImg = document.getElementById('chartModalImg');
+    const modalTitle = document.getElementById('chartModalTitle');
+    if (modal && modalImg) {
+        modalImg.src = imgSrc;
+        if (titleText && modalTitle) modalTitle.textContent = titleText;
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeChartModal(e) {
+    if (!e || e.target.id === 'chartModal' || e.target.classList.contains('chart-modal-close') || e.target.classList.contains('chart-modal-img')) {
+        const modal = document.getElementById('chartModal');
+        if (modal) {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    }
+}
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeChartModal();
+    }
+});
+</script>
+
+</body>
+</html>

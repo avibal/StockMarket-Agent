@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>תחקיר טרייד מעמיק והפקת לקחים - {{TICKER}} ({{DATE}})</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="Report_Template/post_mortem_style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Macro Alert Banner (Auto-populated if macro event occurred) -->
+    {{MACRO_ALERT_BANNER}}
+
+    <!-- Header Section -->
+    <div class="header-card">
+        <div class="header-top">
+            <div class="title-group">
+                <h1>📋 תחקיר טרייד והפקת לקחים: {{TICKER}}</h1>
+                <div class="subtitle">{{NAME}} • תאריך טרייד: {{DATE}} • הופק אוטומטית ע"י מערכת StockMarket AI Agent</div>
+            </div>
+            <div class="badge-outcome {{OUTCOME_BADGE_CLASS}}">
+                <span>{{OUTCOME_BADGE_TEXT}}</span>
+            </div>
+        </div>
+
+        <!-- Metrics Grid -->
+        {{METRICS_HTML}}
+    </div>
+
+    <!-- Section 1: Trade ID Card -->
+    <div class="section-title">
+        <span>📊 תעודת זהות של הטרייד (Trade Specification)</span>
+    </div>
+    <div class="data-table-container">
+        {{TRADE_ID_TABLE_HTML}}
+    </div>
+
+    <!-- Section 2: Intraday Timeline & Macro Event -->
+    <div class="section-title">
+        <span>⏱️ ציר זמן תוך-יומי ומהלך האירועים בשוק (Market Timeline)</span>
+    </div>
+    <div class="data-table-container">
+        {{TIMELINE_TABLE_HTML}}
+    </div>
+
+    <!-- Section 3: Root Cause Analysis (3 Core Questions) -->
+    <div class="section-title">
+        <span>🔍 תחקיר עומק: ניתוח 3 שאלות השורש (Root Cause Audit)</span>
+    </div>
+    <div class="questions-grid">
+        <div class="question-card q1">
+            <div class="question-header">
+                <span>1️⃣ מה קרה בשוק בדיוק באותן שעות?</span>
+            </div>
+            <div class="question-body">
+                {{Q1_ANSWER}}
+            </div>
+        </div>
+
+        <div class="question-card q2">
+            <div class="question-header">
+                <span>2️⃣ מה לא היה נכון במחירי הכניסה והיציאה?</span>
+            </div>
+            <div class="question-body">
+                {{Q2_ANSWER}}
+            </div>
+        </div>
+
+        <div class="question-card q3">
+            <div class="question-header">
+                <span>3️⃣ האם הסטופ לוס היה צר מדי לסוג הנכס?</span>
+            </div>
+            <div class="question-body">
+                {{Q3_ANSWER}}
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 4: Thesis Verdict & Discipline Test -->
+    <div class="section-title">
+        <span>🧠 מבחן התזה הטכנית ומשמעת ניהול סיכונים (Discipline & Thesis Test)</span>
+    </div>
+    <div class="highlight-box" style="margin-bottom: 24px; padding: 20px;">
+        {{THESIS_VERDICT_HTML}}
+    </div>
+
+    <!-- Section 5: Financial Breakdown & Tax Shield -->
+    <div class="section-title">
+        <span>💰 תחשיב פיננסי, עמלות ומגן מס (Financial Audit & Tax Shield)</span>
+    </div>
+    <div class="financial-box">
+        <div class="financial-title">
+            <span>🛡️ הגנת תיק ומגן מס רווחי הון בישראל (25%)</span>
+        </div>
+        {{FINANCIAL_TABLE_HTML}}
+    </div>
+
+    <!-- Section 6: Actionable Rules Checklist -->
+    <div class="section-title">
+        <span>🛠️ צ'ק-ליסט כללי ברזל מערכתיים ליישום מיידי (Actionable Takeaways)</span>
+    </div>
+    <div class="rules-grid">
+        {{ACTIONABLE_RULES_HTML}}
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        דוח תחקיר זה הופק אוטומטית באמצעות StockMarket AI Agent • נתונים היסטוריים מבוססים על TradingView ו-yfinance • למידה מתמדת מטריידים היא סוד ההצלחה במסחר.
+    </div>
+
+</div>
+
+</body>
+</html>

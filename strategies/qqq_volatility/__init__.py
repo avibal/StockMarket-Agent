@@ -1,0 +1,1 @@
+"""QQQ Volatility Strategy Package"""

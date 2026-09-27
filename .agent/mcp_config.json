@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "tradingview": {
+      "command": "C:\\AB\\Dev\\StockMarket\\StockMarket-Agent\\.venv\\Scripts\\tradingview-mcp.exe",
+      "args": [
+        "stdio"
+      ]
+    }
+  }
+}
