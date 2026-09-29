@@ -2,8 +2,8 @@ name: Daily QQQ Volatility Committee Scan
 
 on:
   schedule:
-    # Runs at 19:30 UTC every Monday to Friday (22:30 Israel Time IDT / UTC+3)
-    - cron: '30 19 * * 1-5'
+    # Runs at 17:05 UTC every Monday to Friday (20:05 Israel Time IDT / UTC+3)
+    - cron: '5 17 * * 1-5'
   workflow_dispatch: # Allows manual trigger from GitHub UI anytime
 
 permissions:
