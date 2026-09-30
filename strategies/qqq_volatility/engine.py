@@ -7,6 +7,7 @@ sizes $10,000 TQQQ positions with +1.0% target, and simulates the last 30 tradin
 import os
 import sys
 import json
+import time
 import argparse
 from datetime import datetime, timedelta
 import numpy as np
@@ -31,48 +32,111 @@ def calculate_rsi(series: pd.Series, period: int = 14) -> pd.Series:
     return 100.0 - (100.0 / (1.0 + rs))
 
 
+def fetch_ticker_individual(ticker: str, period: str = "1y") -> pd.DataFrame:
+    """Fetch a single ticker using yf.Ticker to avoid batch SQLite locking."""
+    try:
+        t = yf.Ticker(ticker)
+        df = t.history(period=period, interval="1d", auto_adjust=False)
+        if not df.empty:
+            df.columns = [c.lower() for c in df.columns]
+            if df.index.tz is not None:
+                df.index = df.index.tz_localize(None)
+        return df
+    except Exception as e:
+        print(f"Warning: Failed to fetch individual ticker {ticker}: {e}", file=sys.stderr)
+        return pd.DataFrame()
+
+
 def fetch_strategy_data():
-    """Fetch daily price history for QQQ, TQQQ and ^VIX."""
+    """Fetch daily price history for QQQ, TQQQ and ^VIX with robust retries, threads=False, and fallback."""
     tickers = ["QQQ", "TQQQ", "^VIX"]
-    data = yf.download(tickers, period="1y", interval="1d", progress=False, auto_adjust=False)
+    data = None
     
-    if data.empty:
-        raise ValueError("Failed to fetch market data from yfinance.")
-    
-    # Handle MultiIndex columns
-    if isinstance(data.columns, pd.MultiIndex):
+    # 1. Attempt batch download with threads=False to avoid SQLite lock collisions
+    for attempt in range(1, 4):
+        try:
+            data = yf.download(tickers, period="1y", interval="1d", progress=False, auto_adjust=False, threads=False)
+            if data is not None and not data.empty and isinstance(data.columns, pd.MultiIndex):
+                if 'Close' in data and 'QQQ' in data['Close'] and 'TQQQ' in data['Close']:
+                    if len(data['Close']['QQQ'].dropna()) >= 50 and len(data['Close']['TQQQ'].dropna()) >= 50:
+                        break
+            time.sleep(1.5)
+        except Exception as e:
+            print(f"Warning: Batch download attempt {attempt} failed ({e}). Retrying...", file=sys.stderr)
+            time.sleep(2.0)
+            
+    # Check if batch data is complete and valid
+    is_valid_batch = False
+    if data is not None and not data.empty and isinstance(data.columns, pd.MultiIndex):
+        if 'Close' in data and 'QQQ' in data['Close'] and 'TQQQ' in data['Close']:
+            if len(data['Close']['QQQ'].dropna()) >= 50 and len(data['Close']['TQQQ'].dropna()) >= 50:
+                is_valid_batch = True
+                
+    if is_valid_batch:
         closes = data['Close']
         highs = data['High']
         lows = data['Low']
         opens = data['Open']
         volumes = data['Volume']
+        
+        df_qqq = pd.DataFrame({
+            'open': opens['QQQ'],
+            'high': highs['QQQ'],
+            'low': lows['QQQ'],
+            'close': closes['QQQ'],
+            'volume': volumes['QQQ']
+        }).dropna()
+        
+        df_tqqq = pd.DataFrame({
+            'open': opens['TQQQ'],
+            'high': highs['TQQQ'],
+            'low': lows['TQQQ'],
+            'close': closes['TQQQ'],
+            'volume': volumes['TQQQ']
+        }).dropna()
+        
+        vix_series = closes['^VIX'].dropna() if '^VIX' in closes else pd.Series(dtype=float)
     else:
-        closes = data[['Close']]
-        highs = data[['High']]
-        lows = data[['Low']]
-        opens = data[['Open']]
-        volumes = data[['Volume']]
-    
-    df_qqq = pd.DataFrame({
-        'open': opens['QQQ'],
-        'high': highs['QQQ'],
-        'low': lows['QQQ'],
-        'close': closes['QQQ'],
-        'volume': volumes['QQQ']
-    }).dropna()
-    
-    df_tqqq = pd.DataFrame({
-        'open': opens['TQQQ'],
-        'high': highs['TQQQ'],
-        'low': lows['TQQQ'],
-        'close': closes['TQQQ'],
-        'volume': volumes['TQQQ']
-    }).dropna()
-    
-    vix_series = closes['^VIX'].dropna() if '^VIX' in closes else pd.Series(dtype=float)
-    
+        # Fallback to individual ticker download
+        print("Notice: Falling back to individual ticker downloads...", file=sys.stderr)
+        hist_qqq = fetch_ticker_individual("QQQ")
+        hist_tqqq = fetch_ticker_individual("TQQQ")
+        hist_vix = fetch_ticker_individual("^VIX")
+        
+        if hist_qqq.empty or hist_tqqq.empty:
+            raise ValueError("Failed to fetch QQQ or TQQQ data from yfinance after all attempts.")
+            
+        df_qqq = pd.DataFrame({
+            'open': hist_qqq['open'],
+            'high': hist_qqq['high'],
+            'low': hist_qqq['low'],
+            'close': hist_qqq['close'],
+            'volume': hist_qqq['volume']
+        }).dropna()
+        
+        df_tqqq = pd.DataFrame({
+            'open': hist_tqqq['open'],
+            'high': hist_tqqq['high'],
+            'low': hist_tqqq['low'],
+            'close': hist_tqqq['close'],
+            'volume': hist_tqqq['volume']
+        }).dropna()
+        
+        vix_series = hist_vix['close'].dropna() if not hist_vix.empty and 'close' in hist_vix else pd.Series(dtype=float)
+        
+    # Strip any timezone to guarantee clean index alignment
+    if df_qqq.index.tz is not None:
+        df_qqq.index = df_qqq.index.tz_localize(None)
+    if df_tqqq.index.tz is not None:
+        df_tqqq.index = df_tqqq.index.tz_localize(None)
+    if hasattr(vix_series.index, 'tz') and vix_series.index.tz is not None:
+        vix_series.index = vix_series.index.tz_localize(None)
+        
     # Align dates
     common_idx = df_qqq.index.intersection(df_tqqq.index)
+    if len(common_idx) < 30:
+        raise ValueError(f"Insufficient aligned price data ({len(common_idx)} bars).")
+        
     df_qqq = df_qqq.loc[common_idx].copy()
     df_tqqq = df_tqqq.loc[common_idx].copy()
     vix_series = vix_series.reindex(common_idx).ffill().bfill()
